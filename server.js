@@ -5,14 +5,16 @@ const express = require('express');
 const cors = require('cors');
 const http = require('http');
 const socketio = require('socket.io');
-const fs = require('fs');
+const fs = require('fs').promises;
 
 const app = express();
 const userRoutes = require('./routes/userRoutes');
+const chatRoutes = require('./routes/chatRoutes');
 const messageRoutes = require('./routes/messageRoutes');
-const chatRoomRoutes = require('./routes/chatRoomRoutes');
 const productRoutes = require('./routes/productRoutes');
 const searchHistoryRoutes = require('./routes/searchHistoryRoutes');
+const ocrRoutes = require('./routes/ocrRoutes');
+const messageController = require('./controllers/messageController');
 
 // 미들웨어 설정
 app.use(cors()); // 모든 도메인에서의 요청을 허용
@@ -22,6 +24,7 @@ app.use(express.json()); // JSON 요청 파싱
 app.use('/users', userRoutes);
 app.use('/product', productRoutes);
 app.use('/searchHistory', searchHistoryRoutes);
+app.use('/api', ocrRoutes);
 
 // CORS 처리를 위한 미들웨어 추가
 app.use((req, res, next) => {
@@ -43,14 +46,17 @@ app.listen(PORT, () => {
 });
 
 // 오류 로그 파일 작성 함수
-function logErrorToFile(error) {
-  const logMessage = `${new Date().toISOString()} - ${error.stack}\n`;
-  fs.appendFile('error.log', logMessage, (err) => {
-    if (err) {
-      console.error('Failed to write to log file:', err);
-    }
-  });
+async function logErrorToFile(error) {
+  // const logMessage = `${new Date().toISOString()} - ${error.stack}\n`;
+  const logMessage = `${new Date().toISOString()} - ${error.message}\n`; // 오류 메시지만 기록하도록 수정
+
+  try {
+    await fs.appendFile('error.log', logMessage);
+  } catch (err) {
+    console.error('Failed to write to log file:', err);
+  }
 }
+
 
 // 소켓 서버 설정
 const socketServer = express();
@@ -61,8 +67,9 @@ const io = socketio(socketServerHttp, {
   },
 });
 socketServer.use(cors()); // 모든 도메인에서의 요청을 허용
-socketServer.use('/messages', messageRoutes);
-socketServer.use('/chatRooms', chatRoomRoutes);
+socketServer.use(express.json()); // JSON 요청 파싱
+socketServer.use('/chats', messageRoutes);
+socketServer.use('/chats', chatRoutes);
 
 io.on('connection', (socket) => {
   console.log('Client connected');
@@ -75,7 +82,8 @@ io.on('connection', (socket) => {
       io.emit('newMessage', message);
     } catch (error) {
       console.error('Error sending message:', error);
-      logErrorToFile(error); // 오류를 로그 파일에 기록
+      logErrorToFile(error);
+
     }
   });
 

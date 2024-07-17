@@ -96,7 +96,7 @@ router.put('/toggleFavorite/:productId', productController.toggleFavorite);
  * @desc 특정 사용자의 찜 목록 조회
  * @access Public
  */
-router.get('/favorites/:userId/:productId', productController.getFavorites);
+router.get('/favorites/:userId', productController.getFavorites);
 
 /**
  * @route POST /ratings
