@@ -6,15 +6,16 @@ const userModel = {
      * @param {string} id - 조회할 사용자의 ID.
      * @returns {Promise<object>} 사용자 정보 객체.
      */
-    getUserById: async (id) => {
-        try {
+    getUserById: (id) => {
+        return new Promise((resolve, reject) => {
             const query = 'SELECT * FROM users WHERE id = ?';
-            const [userRows] = await pool.execute(query, [id]);
-            return userRows[0];
-        } catch (error) {
-            console.error('ID로 사용자 조회 중 오류 발생:', error);
-            throw error;
-        }
+            pool.execute(query, [id])
+                .then(([userRows]) => resolve(userRows[0]))
+                .catch((error) => {
+                    console.error('ID로 사용자 조회 중 오류 발생:', error);
+                    reject(error);
+                });
+        });
     },
 
     /**
@@ -28,17 +29,19 @@ const userModel = {
      * @param {string} studentIdImageUrl - 학생증 이미지 URL.
      * @returns {Promise<void>}
      */
-    addUser: async (id, password, email, department, grade, name, studentIdImageUrl) => {
-        try {
+    addUser: (id, password, email, department, grade, name, studentIdImageUrl) => {
+        return new Promise((resolve, reject) => {
             const query = `
                 INSERT INTO users (id, password, email, department, grade, name, student_id_image_url)
                 VALUES (?, ?, ?, ?, ?, ?, ?)
             `;
-            await pool.execute(query, [id, password, email, department, grade, name, studentIdImageUrl]);
-        } catch (error) {
-            console.error('사용자 추가 중 오류 발생:', error);
-            throw error;
-        }
+            pool.execute(query, [id, password, email, department, grade, name, studentIdImageUrl])
+                .then(() => resolve())
+                .catch((error) => {
+                    console.error('사용자 추가 중 오류 발생:', error);
+                    reject(error);
+                });
+        });
     },
 
     /**
@@ -46,34 +49,36 @@ const userModel = {
      * @param {string} id - 찾고자 하는 사용자의 ID.
      * @returns {Promise<Array>} 사용자 정보 배열.
      */
-    findUserById: async (id) => {
-        try {
+    findUserById: (id) => {
+        return new Promise((resolve, reject) => {
             const query = 'SELECT * FROM users WHERE id = ?';
-            const [rows] = await pool.execute(query, [id]);
-            return rows;
-        } catch (error) {
-            console.error('ID로 사용자 조회 중 오류 발생:', error);
-            throw error;
-        }
+            pool.execute(query, [id])
+                .then(([rows]) => resolve(rows))
+                .catch((error) => {
+                    console.error('ID로 사용자 조회 중 오류 발생:', error);
+                    reject(error);
+                });
+        });
     },
 
     /**
      * 모든 승인되지 않은 사용자 정보를 가져옵니다.
      * @returns {Promise<Array>} 승인되지 않은 사용자 정보 배열.
      */
-    getPendingUsers: async () => {
-        try {
+    getPendingUsers: () => {
+        return new Promise((resolve, reject) => {
             const query = `
                 SELECT id, name, email, department, grade, student_id_image_url, admin 
                 FROM users 
                 WHERE admin != 'admin' AND admin != 'approved'
             `;
-            const [rows] = await pool.query(query);
-            return rows;
-        } catch (error) {
-            console.error('미승인 사용자 정보 가져오기 오류:', error);
-            throw error;
-        }
+            pool.query(query)
+                .then(([rows]) => resolve(rows))
+                .catch((error) => {
+                    console.error('미승인 사용자 정보 가져오기 오류:', error);
+                    reject(error);
+                });
+        });
     },
 
     /**
@@ -83,33 +88,36 @@ const userModel = {
      * @param {string} rejectionReason - 거절 사유 (옵션).
      * @returns {Promise<void>}
      */
-    updateApprovalStatus: async (userId, approvalStatus, rejectionReason = null) => {
-        try {
+    updateApprovalStatus: (userId, approvalStatus, rejectionReason = null) => {
+        return new Promise((resolve, reject) => {
             const query = 'UPDATE users SET admin = ?, rejection_reason = ? WHERE id = ?';
-            await pool.query(query, [approvalStatus, rejectionReason, userId]);
-        } catch (error) {
-            console.error('승인 상태 업데이트 중 오류 발생:', error);
-            throw error;
-        }
+            pool.query(query, [approvalStatus, rejectionReason, userId])
+                .then(() => resolve())
+                .catch((error) => {
+                    console.error('승인 상태 업데이트 중 오류 발생:', error);
+                    reject(error);
+                });
+        });
     },
 
     /**
      * 승인된 사용자 정보를 가져옵니다.
      * @returns {Promise<Array>} 승인된 사용자 정보 배열.
      */
-    getApprovedUsers: async () => {
-        try {
+    getApprovedUsers: () => {
+        return new Promise((resolve, reject) => {
             const query = `
                 SELECT id, name, email, department, grade, student_id_image_url, admin 
                 FROM users 
                 WHERE admin = 'approved'
             `;
-            const [rows] = await pool.query(query);
-            return rows;
-        } catch (error) {
-            console.error('승인된 사용자 정보 가져오기 오류:', error);
-            throw error;
-        }
+            pool.query(query)
+                .then(([rows]) => resolve(rows))
+                .catch((error) => {
+                    console.error('승인된 사용자 정보 가져오기 오류:', error);
+                    reject(error);
+                });
+        });
     },
 
     /**
@@ -117,15 +125,16 @@ const userModel = {
      * @param {string} userId - 사용자 ID.
      * @returns {Promise<string|null>} 사용자 유형 (없으면 null).
      */
-    getUserTypeById: async (userId) => {
-        try {
+    getUserTypeById: (userId) => {
+        return new Promise((resolve, reject) => {
             const query = 'SELECT userType FROM users WHERE id = ?';
-            const [rows] = await pool.query(query, [userId]);
-            return rows.length ? rows[0].userType : null;
-        } catch (error) {
-            console.error('사용자 유형 조회 중 오류 발생:', error);
-            throw error;
-        }
+            pool.query(query, [userId])
+                .then(([rows]) => resolve(rows.length ? rows[0].userType : null))
+                .catch((error) => {
+                    console.error('사용자 유형 조회 중 오류 발생:', error);
+                    reject(error);
+                });
+        });
     },
 
     /**
@@ -134,13 +143,20 @@ const userModel = {
      * @param {string} hashedPassword - 해시된 새로운 비밀번호.
      * @returns {Promise<void>}
      */
-    updatePassword: async (userId, hashedPassword) => {
-        const query = 'UPDATE users SET password = ? WHERE id = ?';
-        await pool.execute(query, [hashedPassword, userId]);
+    updatePassword: (userId, hashedPassword) => {
+        return new Promise((resolve, reject) => {
+            const query = 'UPDATE users SET password = ? WHERE id = ?';
+            pool.execute(query, [hashedPassword, userId])
+                .then(() => resolve())
+                .catch((error) => {
+                    console.error('비밀번호 업데이트 중 오류 발생:', error);
+                    reject(error);
+                });
+        });
     },
 
     /**
-     * 사용자 정보 업데이트
+     * 사용자 정보를 업데이트합니다.
      * @param {string} userId - 사용자 ID.
      * @param {object} updatedUserInfo - 업데이트할 사용자 정보 객체.
      * @param {string} updatedUserInfo.name - 사용자 이름.
@@ -149,12 +165,20 @@ const userModel = {
      * @param {string} updatedUserInfo.email - 사용자 이메일.
      * @returns {Promise<void>}
      */
-    updateUserInfo: async (userId, updatedUserInfo) => {
-        const { name, grade, department, email } = updatedUserInfo;
-        await pool.execute(
-            'UPDATE users SET name = ?, grade = ?, department = ?, email = ? WHERE id = ?',
-            [name, grade, department, email, userId]
-        );
+    updateUserInfo: (userId, updatedUserInfo) => {
+        return new Promise((resolve, reject) => {
+            const { name, grade, department, email } = updatedUserInfo;
+            const query = `
+                UPDATE users SET name = ?, grade = ?, department = ?, email = ? 
+                WHERE id = ?
+            `;
+            pool.execute(query, [name, grade, department, email, userId])
+                .then(() => resolve())
+                .catch((error) => {
+                    console.error('사용자 정보 업데이트 중 오류 발생:', error);
+                    reject(error);
+                });
+        });
     },
 
     /**
@@ -162,15 +186,16 @@ const userModel = {
      * @param {string} userId - 조회할 사용자의 ID.
      * @returns {Promise<object>} 사용자 정보 객체.
      */
-    getById: async (userId) => {
-        try {
-            const query = `SELECT id, name, department, grade, rates FROM users WHERE id = ?`;
-            const [rows] = await pool.query(query, [userId]);
-            return rows[0];
-        } catch (error) {
-            console.error('ID로 사용자 조회 중 오류 발생:', error);
-            throw error;
-        }
+    getById: (userId) => {
+        return new Promise((resolve, reject) => {
+            const query = 'SELECT id, name, department, grade, rates FROM users WHERE id = ?';
+            pool.query(query, [userId])
+                .then(([rows]) => resolve(rows[0]))
+                .catch((error) => {
+                    console.error('ID로 사용자 조회 중 오류 발생:', error);
+                    reject(error);
+                });
+        });
     },
 
     /**
@@ -178,14 +203,20 @@ const userModel = {
      * @param {string} userId - 사용자 ID.
      * @returns {Promise<number>} 총 판매 금액.
      */
-    getTotalSales: async (userId) => {
-        try {
-            const [sales] = await pool.execute('SELECT IFNULL(SUM(p.amount), 0) AS total_sales FROM payments p WHERE p.seller_id = ?', [userId]);
-            return sales[0].total_sales;
-        } catch (error) {
-            console.error('총 판매 금액 조회 중 오류 발생:', error);
-            throw error;
-        }
+    getTotalSales: (userId) => {
+        return new Promise((resolve, reject) => {
+            const query = `
+                SELECT IFNULL(SUM(p.amount), 0) AS total_sales 
+                FROM payments p 
+                WHERE p.seller_id = ?
+            `;
+            pool.execute(query, [userId])
+                .then(([sales]) => resolve(sales[0].total_sales))
+                .catch((error) => {
+                    console.error('총 판매 금액 조회 중 오류 발생:', error);
+                    reject(error);
+                });
+        });
     },
 
     /**
@@ -193,29 +224,54 @@ const userModel = {
      * @param {string} userId - 사용자 ID.
      * @returns {Promise<number>} 판매된 상품의 총 가격.
      */
-    getTotalPriceOfSoldProducts: async (userId) => {
-        try {
-            const [soldProducts] = await pool.execute('SELECT IFNULL(SUM(pr.price), 0) AS total_price FROM products pr JOIN payments p ON pr.id = p.product_id WHERE pr.user_id = ?', [userId]);
-            return soldProducts[0].total_price;
-        } catch (error) {
-            console.error('판매된 상품 총 가격 조회 중 오류 발생:', error);
-            throw error;
-        }
+    getTotalPriceOfSoldProducts: (userId) => {
+        return new Promise((resolve, reject) => {
+            const query = `
+                SELECT IFNULL(SUM(pr.price), 0) AS total_price 
+                FROM products pr 
+                JOIN payments p ON pr.id = p.product_id 
+                WHERE pr.user_id = ?
+            `;
+            pool.execute(query, [userId])
+                .then(([soldProducts]) => resolve(soldProducts[0].total_price))
+                .catch((error) => {
+                    console.error('판매된 상품 총 가격 조회 중 오류 발생:', error);
+                    reject(error);
+                });
+        });
     },
-    getProductWithSellerInfo: async (productId) => {
-        const connection = await pool.getConnection();
-        try {
-            const [productRows] = await connection.execute(`
-            SELECT p.user_id, u.name, u.rates 
-            FROM products p 
-            INNER JOIN users u ON p.user_id = u.id 
-            WHERE p.id = ?
-          `, [productId]);
 
-            return productRows;
-        } finally {
-            connection.release();
-        }
+    /**
+     * 주어진 상품 ID로 판매자 정보를 포함한 상품 정보를 가져옵니다.
+     * @param {string} productId - 상품 ID.
+     * @returns {Promise<object>} 판매자 정보를 포함한 상품 정보 객체.
+     */
+    getProductWithSellerInfo: (productId) => {
+        return new Promise((resolve, reject) => {
+            pool.getConnection()
+                .then((connection) => {
+                    const query = `
+                        SELECT p.user_id, u.name, u.rates 
+                        FROM products p 
+                        INNER JOIN users u ON p.user_id = u.id 
+                        WHERE p.id = ?
+                    `;
+                    connection.execute(query, [productId])
+                        .then(([productRows]) => {
+                            connection.release();
+                            resolve(productRows[0]);
+                        })
+                        .catch((error) => {
+                            connection.release();
+                            console.error('상품 및 판매자 정보 조회 중 오류 발생:', error);
+                            reject(error);
+                        });
+                })
+                .catch((error) => {
+                    console.error('DB 연결 중 오류 발생:', error);
+                    reject(error);
+                });
+        });
     }
 };
 
