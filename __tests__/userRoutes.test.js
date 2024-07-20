@@ -3,7 +3,7 @@ const express = require('express');
 const userRouter = require('../routes/userRoutes'); // 실제 경로를 사용하십시오
 const userController = require('../controllers/userController'); // 실제 경로를 사용하십시오
 const path = require('path');
-const fs = require('fs');
+// const fs = require('fs');
 
 const app = express();
 app.use(express.json());
