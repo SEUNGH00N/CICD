@@ -1,0 +1,28 @@
+name: shoonCICD
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 체크아웃 리포지토리 내용
+        uses: actions/checkout@v2
+
+      - name: 설정된 노드 버전 사용
+        uses: actions/setup-node@v2
+        with:
+          node-version: '20'
+
+      - name: 의존성 설치
+        run: npm install
+
+      - name: 테스트 실행
+        run: npx jest
