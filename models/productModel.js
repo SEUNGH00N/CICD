@@ -45,7 +45,6 @@ const productModel = {
      * @param {number} productId 상품 ID
      */
     deleteById: async (productId) => {
-        // 관련된 데이터를 모두 삭제
         await pool.query('DELETE FROM favorites WHERE product_id = ?', [productId]);
         await pool.query('DELETE FROM messages WHERE productId = ?', [productId]);
         await pool.query('DELETE FROM product_ratings WHERE product_id = ?', [productId]);
@@ -291,8 +290,6 @@ const productModel = {
         const [result] = await pool.query('UPDATE products SET views = views + 1 WHERE id = ?', [productId]);
         return result;
     }
-
-
 };
 
 module.exports = productModel;
