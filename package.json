@@ -4,7 +4,7 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "test": "npx jest",
+    "test": "jest",
     "start": "node server.js"
   },
   "keywords": [],
