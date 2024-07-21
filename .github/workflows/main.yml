@@ -24,5 +24,8 @@ jobs:
       - name: 의존성 설치
         run: npm install
 
+      - name: Ensure jest has executable permissions
+        run: chmod +x ./node_modules/.bin/jest
+
       - name: 테스트 실행
         run: npm test
