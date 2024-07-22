@@ -1,3 +1,6 @@
+# Contact
+rlatmdgns0397@naver.com
+
 # ShoonCICD
 
 This project demonstrates a CI/CD pipeline setup using GitHub Actions and follows the MVC architectural pattern.
