@@ -1,5 +1,10 @@
 node_modules
-node_modules
 
 # .env 파일 제외
 .env
+
+# uploads_id 폴더 및 모든 하위 파일 제외
+uploads_id/
+
+# uploads 폴더 및 모든 하위 파일 제외
+uploads/
