@@ -24,7 +24,7 @@ app.use(express.json()); // JSON 요청 파싱
 app.use('/users', userRoutes);
 app.use('/product', productRoutes);
 app.use('/searchHistory', searchHistoryRoutes);
-app.use('/api', ocrRoutes);
+app.use('/apis', ocrRoutes);
 
 // CORS 처리를 위한 미들웨어 추가
 app.use((req, res, next) => {
