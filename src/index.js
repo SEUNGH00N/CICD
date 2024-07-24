@@ -6,7 +6,7 @@ import productRoutes from './routes/productRoutes';
 import chatRoutes from './routes/chatRoutes';
 import messageRoutes from './routes/messageRoutes';
 import messageController from './controllers/messageController';
-
+import ocrRoutes from './routes/ocrRoutes';
 import socketio from 'socket.io';
 import cors from 'cors';
 import http from 'http';
@@ -26,6 +26,7 @@ app.use('/uploads_id', express.static('uploads_id'));
 // Routes
 app.use('/users', userRoutes);
 app.use('/product', productRoutes);
+app.use('/api', ocrRoutes);
 
 // 소켓 서버 설정
 const socketServer = express();
