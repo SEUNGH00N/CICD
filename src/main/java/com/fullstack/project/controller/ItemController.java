@@ -49,48 +49,32 @@ public class ItemController {
   }
 
   /**
-   * 새 Item 객체를 생성하는 메서드입니다.
+   * Item 객체를 생성하거나 업데이트하는 메서드입니다.
    * <p>
-   * TODO: 생성 시 로그로 기록 및 백업 처리 추가
-   * - 저장된 로그를 관리자 페이지에서 관리할 수 있도록 설정합니다.
+   * 이 메서드는 전달된 Item 객체의 ID에 따라 생성 또는 업데이트 작업을 수행합니다.
    * </p>
    * 
+   * @param id   Item 객체의 ID (생성 시 null, 업데이트 시 존재하는 ID).
    * @param item 요청 본문에서 전달된 Item 객체.
-   * @return 생성된 Item 객체와 HTTP 상태 코드 201 Created를 포함하는 ResponseEntity 객체.
+   * @return 생성 또는 업데이트된 Item 객체와 HTTP 상태 코드 201 Created 또는 200 OK를 포함하는
+   *         ResponseEntity 객체.
    */
   @PostMapping
-  public ResponseEntity<Item> createItem(@RequestBody Item item) {
-    // TODO: 로그 기록 및 백업 처리 로직 추가
-    // 로그 기록: 생성된 Item 정보를 로그로 기록합니다.
-    // 백업: 생성된 Item 정보를 백업하여 데이터 손실에 대비합니다.
-    return new ResponseEntity<>(itemService.saveItem(item), HttpStatus.CREATED); // 새 Item 객체를 서비스 레이어에서 저장하고 201
-                                                                                 // Created 응답을 반환합니다.
-  }
-
-  /**
-   * 특정 ID를 가진 Item 객체를 업데이트하는 메서드입니다.
-   * <p>
-   * TODO: POST 방식으로 변경 및 통합 고려
-   * - PUT 방식 대신 POST 방식으로 업데이트 요청을 처리할 수 있습니다.
-   * </p>
-   * 
-   * @param id   업데이트할 Item 객체의 ID.
-   * @param item 요청 본문에서 전달된 Item 객체 (업데이트할 데이터).
-   * @return 업데이트된 Item 객체와 HTTP 상태 코드 200 OK를 포함하는 ResponseEntity 객체,
-   *         또는 Item 객체가 존재하지 않을 경우 HTTP 상태 코드 404 Not Found를 포함하는 ResponseEntity
-   *         객체.
-   */
-  @PutMapping("/{id}")
-  public ResponseEntity<Item> updateItem(@PathVariable Long id, @RequestBody Item item) {
-    Item existingItem = itemService.getItemById(id); // 서비스 레이어에서 기존 Item 객체를 가져옵니다.
-    if (existingItem != null) {
-      item.setId(id); // 요청 본문에서 전달된 Item 객체의 ID를 설정하여 업데이트합니다.
-      // TODO: 로그 기록 및 백업 처리 로직 추가
-      // 로그 기록: 업데이트된 Item 정보를 로그로 기록합니다.
-      // 백업: 업데이트된 Item 정보를 백업하여 데이터 손실에 대비합니다.
-      return new ResponseEntity<>(itemService.saveItem(item), HttpStatus.OK); // 업데이트된 Item 객체를 반환하고 200 OK 응답을 반환합니다.
+  public ResponseEntity<Item> saveOrUpdateItem(@RequestBody Item item) {
+    if (item.getId() != null) {
+      Item existingItem = itemService.getItemById(item.getId()); // 서비스 레이어에서 기존 Item 객체를 가져옵니다.
+      if (existingItem != null) {
+        // 기존 Item 객체를 업데이트합니다.
+        Item updatedItem = itemService.saveItem(item);
+        return new ResponseEntity<>(updatedItem, HttpStatus.OK); // 업데이트된 Item 객체를 반환하고 200 OK 응답을 반환합니다.
+      } else {
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND); // ID가 존재하지만 아이템을 찾을 수 없는 경우 404 Not Found 응답을 반환합니다.
+      }
+    } else {
+      // 새 Item 객체를 생성합니다.
+      Item newItem = itemService.saveItem(item);
+      return new ResponseEntity<>(newItem, HttpStatus.CREATED); // 새 Item 객체를 저장하고 201 Created 응답을 반환합니다.
     }
-    return new ResponseEntity<>(HttpStatus.NOT_FOUND); // 기존 Item 객체가 존재하지 않으면 404 Not Found 응답을 반환합니다.
   }
 
   /**

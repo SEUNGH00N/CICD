@@ -4,6 +4,12 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ElementCollection;
+import jakarta.persistence.CollectionTable;
+import jakarta.persistence.Column;
+import jakarta.persistence.JoinColumn;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * 데이터베이스의 Item 테이블과 매핑되는 JPA 엔티티 클래스입니다.
@@ -20,6 +26,11 @@ public class Item {
 
   private String name; // Item의 이름
   private String description; // Item의 설명
+
+  @ElementCollection // 이 필드가 기본 타입 또는 임베디드 타입의 컬렉션임을 나타냅니다.
+  @CollectionTable(name = "item_tags", joinColumns = @JoinColumn(name = "item_id")) // 태그를 저장할 별도의 테이블을 정의합니다.
+  @Column(name = "tag") // 태그 컬럼의 이름을 정의합니다.
+  private Set<String> tags = new HashSet<>(); // 태그를 저장하는 Set 컬렉션
 
   /**
    * 기본 생성자입니다.
@@ -93,5 +104,41 @@ public class Item {
    */
   public void setDescription(String description) {
     this.description = description;
+  }
+
+  /**
+   * Item의 태그를 반환합니다.
+   * 
+   * @return 태그의 집합
+   */
+  public Set<String> getTags() {
+    return tags;
+  }
+
+  /**
+   * Item의 태그를 설정합니다.
+   * 
+   * @param tags 태그의 집합
+   */
+  public void setTags(Set<String> tags) {
+    this.tags = tags;
+  }
+
+  /**
+   * Item에 태그를 추가합니다.
+   * 
+   * @param tag 추가할 태그
+   */
+  public void addTag(String tag) {
+    this.tags.add(tag);
+  }
+
+  /**
+   * Item에서 태그를 제거합니다.
+   * 
+   * @param tag 제거할 태그
+   */
+  public void removeTag(String tag) {
+    this.tags.remove(tag);
   }
 }
