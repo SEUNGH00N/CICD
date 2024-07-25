@@ -8,7 +8,7 @@
 ### 3. Item 모델 구조 확장성, 모듈 구조 구축
 ### 4. 아이템 사용자 식별자 추가 (index, status, props)
 ### 5. 아이템 수정 기능 (CRUD)
-### 6. ~~
+### 6. 테스트 로직 추가
 
 # Getting Started with Create React App
 
