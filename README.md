@@ -22,8 +22,6 @@
 ### 5. Item modification feature (CRUD)
 ### 6. Add test logic
 
-[![Top Langs](https://github-readme-stats.vercel.app/api/top-langs/?username=SEUNGH00N&theme=merko&layout=compact&locale=kr)](https://github.com/anuraghazra/github-readme-stats)
-
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
