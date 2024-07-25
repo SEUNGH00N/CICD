@@ -10,7 +10,7 @@
 ### 5. 아이템 수정 기능 (CRUD)
 ### 6. 테스트 로직 추가
 
-# Day1 (0725)
+# Day 1 (0725)
 1. Set up MVC and OOP models
 2. Create and delete items / Manage data securely through logs and backup records
 
