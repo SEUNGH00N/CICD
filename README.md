@@ -10,6 +10,19 @@
 ### 5. 아이템 수정 기능 (CRUD)
 ### 6. 테스트 로직 추가
 
+# Day1 (0725)
+1. Set up MVC and OOP models
+2. Create and delete items / Manage data securely through logs and backup records
+
+## TODO: 
+### 1. Admin page item recovery feature
+### 2. Log file management feature
+### 3. Expansion of Item model structure and modular structure development
+### 4. Add item user identifier (index, status, props)
+### 5. Item modification feature (CRUD)
+### 6. Add test logic
+
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
