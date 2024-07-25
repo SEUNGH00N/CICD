@@ -1,3 +1,11 @@
+# 1일차 (0725)
+1. MVC, oop 모델 세팅
+2. item 생성, 삭제 / 로그, 백업 기록을 통한 안전한 데이터 관리
+
+TODO: 1. 관리자 페이지 아이템 복구 기능
+      2. 로그 파일 관리 기능
+      3. Item 모델 구조 확장성, 모듈 구조 구축
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
