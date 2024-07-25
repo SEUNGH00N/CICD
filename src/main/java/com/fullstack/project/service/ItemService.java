@@ -14,6 +14,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -23,7 +24,7 @@ import java.util.stream.Collectors;
  * 클라이언트 요청에 대한 비즈니스 로직을 구현합니다.
  * </p>
  * 
- * @version 1.0
+ * @version 1.1
  */
 @Service
 public class ItemService {
@@ -62,8 +63,17 @@ public class ItemService {
    */
   @Transactional
   public Item saveItem(Item item) {
-    Item savedItem = itemRepository.save(item); // Item 객체를 저장하거나 업데이트합니다.
-    logItemChange("Saved or updated Item: " + savedItem.toString()); // Item 객체를 로그로 기록합니다.
+    // Item 객체의 ID를 확인하여 새로 생성하거나 기존 객체를 업데이트합니다.
+    Item savedItem;
+    if (item.getId() != null && itemRepository.existsById(item.getId())) {
+      // 기존 Item 객체를 업데이트합니다.
+      savedItem = itemRepository.save(item);
+      logItemChange("Updated Item: " + savedItem.toString()); // Item 객체의 업데이트를 로그로 기록합니다.
+    } else {
+      // 새 Item 객체를 생성합니다.
+      savedItem = itemRepository.save(item);
+      logItemChange("Created Item: " + savedItem.toString()); // Item 객체의 생성을 로그로 기록합니다.
+    }
     backupItem(savedItem); // 저장된 Item 객체를 백업합니다.
     return savedItem;
   }
@@ -75,9 +85,9 @@ public class ItemService {
    */
   @Transactional
   public void deleteItem(Long id) {
-    Item item = itemRepository.findById(id).orElse(null); // 삭제할 Item 객체를 조회합니다.
-
-    if (item != null) {
+    Optional<Item> itemOptional = itemRepository.findById(id); // 삭제할 Item 객체를 조회합니다.
+    if (itemOptional.isPresent()) {
+      Item item = itemOptional.get();
       logItemChange("Deleted Item: " + item.toString()); // 삭제된 Item 객체를 로그로 기록합니다.
       backupItem(item); // 삭제된 Item 객체를 백업합니다.
       itemRepository.deleteById(id); // ID로 Item 객체를 삭제합니다.
