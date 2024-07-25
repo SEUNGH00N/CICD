@@ -1,3 +1,6 @@
+<<<<<<< HEAD
+node_modules
+=======
 HELP.md
 .gradle
 build/
@@ -35,3 +38,4 @@ out/
 
 ### VS Code ###
 .vscode/
+>>>>>>> 780556f8d2c08d677edad8de313daef7ee29464b
