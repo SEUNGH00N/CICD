@@ -31,10 +31,12 @@ public class UserController {
 
     @PostMapping("/user/save")
     public String saveUser(@RequestParam("name") String name,
-                           @RequestParam("email") String email) {
+                           @RequestParam("email") String email,
+                           @RequestParam("password") String password) {
         User user = new User();
         user.setName(name);
         user.setEmail(email);
+        user.setPassword(password); // Hash the password
         userService.save(user);
         return "redirect:/users";
     }

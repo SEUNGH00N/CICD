@@ -9,4 +9,5 @@ public interface UserDao {
     void delete(Long id);
     User findById(Long id);
     List<User> findAll();
+    User findByEmail(String email); // Add this method
 }
