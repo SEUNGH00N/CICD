@@ -1,23 +1,23 @@
 <?xml version='1.0' encoding='utf-8'?>
 <!DOCTYPE hibernate-configuration SYSTEM "file:///C:/tmp/my-crud-project/src/main/resources/hibernate-configuration-3.0.dtd">
 <hibernate-configuration>
-    <session-factory>
-        <!-- JDBC Database connection settings -->
-        <property name="hibernate.connection.driver_class">com.mysql.cj.jdbc.Driver</property>
-        <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/javautill</property>
-        <property name="hibernate.connection.username">root</property>
-        <property name="hibernate.connection.password">12345678</property>
+	<session-factory>
+		<!-- JDBC Database connection settings -->
+		<property name="hibernate.connection.driver_class">com.mysql.cj.jdbc.Driver</property>
+		<property name="hibernate.connection.url">jdbc:mysql://localhost:3306/javautill</property>
+		<property name="hibernate.connection.username">root</property>
+		<property name="hibernate.connection.password">12345678</property>
 
-        <!-- Specify dialect -->
-        <property name="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</property>
+		<!-- Specify dialect -->
+		<property name="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</property>
 
-        <!-- Show SQL in console -->
-        <property name="hibernate.show_sql">true</property>
+		<!-- Show SQL in console -->
+		<property name="hibernate.show_sql">true</property>
 
-        <!-- Update the schema automatically -->
-        <property name="hibernate.hbm2ddl.auto">update</property>
+		<!-- Update the schema automatically -->
+		<property name="hibernate.hbm2ddl.auto">update</property>
 
-        <!-- Specify annotated class -->
-        <mapping class="com.example.model.User"/>
-    </session-factory>
+		<!-- Specify annotated class -->
+		<mapping class="com.example.model.User" />
+	</session-factory>
 </hibernate-configuration>
