@@ -36,7 +36,7 @@ public class UserController {
         User user = new User();
         user.setName(name);
         user.setEmail(email);
-        user.setPassword(password); // Hash the password
+        user.setPassword(password); // Hash the password (이 부분에서 실제 암호화 필요)
         userService.save(user);
         return "redirect:/users";
     }

@@ -9,7 +9,8 @@
 		transaction-type="RESOURCE_LOCAL">
 		<!-- 엔티티 클래스 등록 -->
 		<class>com.example.model.User</class>
-
+		<class>com.example.model.Post</class>
+		<class>com.example.model.Comment</class>
 		<!-- MySQL 데이터베이스 연결 설정 -->
 		<properties>
 			<!-- JDBC 연결 설정 -->
