@@ -1,0 +1,42 @@
+name: Deploy to EC2
+
+on:
+  push:
+    branches:
+      - mvn-cicd  # 이 브랜치에 푸시할 때마다 실행
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up JDK
+        uses: actions/setup-java@v2
+        with:
+          java-version: '1.8'
+
+      - name: Build with Maven
+        run: mvn clean package
+
+      - name: Copy files to EC2
+        env:
+          PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY }}  # PEM 키 사용
+          HOST: ec2-52-79-169-147.ap-northeast-2.compute.amazonaws.com
+          USER: ubuntu
+        run: |
+          echo "$PRIVATE_KEY" > ec2_key.pem
+          chmod 600 ec2_key.pem
+          scp -o StrictHostKeyChecking=no -i ec2_key.pem target/*.war $USER@$HOST:/home/ubuntu/cicdauto/
+
+      - name: Restart Tomcat
+        env:
+          PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY }}
+          HOST: ec2-52-79-169-147.ap-northeast-2.compute.amazonaws.com
+          USER: ubuntu
+        run: |
+          echo "$PRIVATE_KEY" > ec2_key.pem
+          chmod 600 ec2_key.pem
+          ssh -o StrictHostKeyChecking=no -i ec2_key.pem $USER@$HOST 'sudo systemctl restart tomcat9'
