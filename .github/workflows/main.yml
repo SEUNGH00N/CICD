@@ -40,4 +40,5 @@ jobs:
         run: |
           echo "$PRIVATE_KEY" > ec2_key.pem
           chmod 600 ec2_key.pem
-          ssh -o StrictHostKeyChecking=no -i ec2_key.pem $USER@$HOST 'sudo chmod +x /opt/tomcat9/bin/* && cd /opt/tomcat9/bin && sudo ./shutdown.sh && sudo ./startup.sh'
+          ssh -o StrictHostKeyChecking=no -i ec2_key.pem $USER@$HOST 'sudo chmod +x /opt/tomcat9/bin/shutdown.sh && sudo chmod +x /opt/tomcat9/bin/startup.sh && sudo /opt/tomcat9/bin/shutdown.sh && sudo /opt/tomcat9/bin/startup.sh'
+
