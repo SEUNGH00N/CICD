@@ -16,7 +16,7 @@ jobs:
       - name: Set up JDK
         uses: actions/setup-java@v2
         with:
-          java-version: '1.8'
+          java-version: '8'  # '1.8' 대신 '8' 사용
           distribution: 'adopt'  # 또는 'zulu'
 
       - name: Build with Maven
